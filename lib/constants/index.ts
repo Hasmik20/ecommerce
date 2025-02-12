@@ -4,3 +4,15 @@ export const APP_DESCRIPTION =
   "A modern eCommerce platform build with next.js";
 export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000/";
+
+export const signInDefaultValues = {
+  email: "",
+  password: "",
+};
+
+export const signUpDefaultValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
