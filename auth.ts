@@ -71,7 +71,7 @@ export const config = {
       return session;
     },
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user }: any) {
+    async jwt({ token, user, trigger, session }: any) {
       //Assign user fields to token
       // console.log(trigger, session);
       if (user) {
@@ -91,7 +91,7 @@ export const config = {
       return token;
     },
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    authorized({ request }: any) {
+    authorized({ request, auth }: any) {
       // console.log(auth);
       //Check for session cart cookie
       if (!request.cookies.get("sessionCartId")) {
