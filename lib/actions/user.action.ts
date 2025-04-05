@@ -15,7 +15,7 @@ import { ShippingAddress } from "@/types";
 import { z } from "zod";
 import { PAGE_SIZE } from "../constants";
 import { revalidatePath } from "next/cache";
-import { getMyCart } from "./cart.action";
+// import { getMyCart } from "./cart.action";
 //sign user with credentials
 
 export const signInWithCredentials = async (
@@ -40,8 +40,8 @@ export const signInWithCredentials = async (
 //Sign user out
 
 export const signOutUser = async () => {
-  const currentCart = await getMyCart();
-  await prisma.cart.delete({ where: { id: currentCart?.id } });
+  // const currentCart = await getMyCart();
+  // await prisma.cart.delete({ where: { id: currentCart?.id } });
   await signOut();
 };
 
