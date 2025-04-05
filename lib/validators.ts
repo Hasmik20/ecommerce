@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { formatNumberWithDecimals } from "./utils";
+import { PAYMENT_METHODS } from "./constants";
 
 const currency = z
   .string()
@@ -19,16 +20,24 @@ export const insertProductsSchema = z.object({
   //convert to number
   stock: z.coerce.number(),
   images: z.array(z.string()).min(1, "Product must have at least on image"),
-  isFeatured: z.boolean(),
+  // isFeatured: z.boolean(),
   //banner could by optional
-  banner: z.string().nullable(),
+  // banner: z.string().nullable(),
   price: currency,
+});
+
+// Schema for updating a product
+export const updateProductSchema = insertProductsSchema.extend({
+  id: z.string().min(1, "Id is required").optional(),
 });
 
 // schema for signing user
 
 export const signInFormSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z
+    .string()
+    .email("Invalid email address")
+    .min(3, "Email must be at least 3 characters"),
   password: z.string().min(5, "Password must be at least 5 characters"),
 });
 
@@ -72,4 +81,82 @@ export const insertCartSchema = z.object({
   taxPrice: currency,
   sessionCartId: z.string().min(1, "Session cart id is required"),
   userId: z.string().optional().nullable(),
+});
+
+//schema for shipping address
+
+export const shippingAddressSchema = z.object({
+  fullName: z.string().min(3, "Name must be at least 3 characters"),
+  streetAddress: z.string().min(3, "Address must be at least 3 characters"),
+  city: z.string().min(3, "city must be at least 3 characters"),
+  postalCode: z.string().min(3, "Postal code must be at least 3 characters"),
+  country: z.string().min(3, "Country must be at least 3 characters"),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+});
+
+//Payment Schema
+export const paymentMethodSchema = z
+  .object({
+    type: z.string().min(1, "Payment method is required"),
+  })
+  .refine((data) => PAYMENT_METHODS.includes(data.type), {
+    path: ["type"],
+    message: "Invalid payment method",
+  });
+
+// Insert Order Schema
+export const insertOrderSchema = z.object({
+  userId: z.string().min(1, "User is required"),
+  itemsPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  totalPrice: currency,
+  paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
+    message: "Invalid payment method",
+  }),
+  shippingAddress: shippingAddressSchema,
+});
+
+export const insertOrderItemSchema = z.object({
+  productId: z.string(),
+  slug: z.string(),
+  image: z.string(),
+  name: z.string(),
+  price: currency,
+  qty: z.number(),
+});
+
+//payment schema
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.string(),
+});
+
+// Update Profile Schema
+export const updateProfileSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters"),
+  email: z.string().min(3, "Email must be at least 3 characters"),
+});
+
+// Update User Schema
+export const updateUserSchema = updateProfileSchema.extend({
+  id: z.string().min(1, "Id is required"),
+
+  role: z.string().min(1, "Role is required"),
+});
+
+// Insert Review Schema
+export const insertReviewSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  description: z.string().min(3, "Description must be at least 3 characters"),
+  productId: z.string().min(1, "Product is required"),
+  userId: z.string().min(1, "User is required"),
+  rating: z.coerce
+    .number()
+    .int()
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating must be at most 5"),
 });

@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 // to make dynamic title
 export const metadata: Metadata = {
   title: {
-    template: `%s | Prostore`,
+    template: `%s | ECommerce`,
     default: APP_NAME,
   },
   description: APP_DESCRIPTION,

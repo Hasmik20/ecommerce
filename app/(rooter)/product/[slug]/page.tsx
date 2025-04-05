@@ -7,6 +7,9 @@ import ProductPrice from "@/components/ui/shared/products/product-price";
 import { getProductDetails } from "@/lib/actions/product.action";
 import { notFound } from "next/navigation";
 import { getMyCart } from "@/lib/actions/cart.action";
+import { auth } from "@/auth";
+import ReviewList from "./review-list";
+import Rating from "@/components/ui/shared/products/rating";
 
 const ProductDetailPage = async ({
   params,
@@ -19,6 +22,9 @@ const ProductDetailPage = async ({
   if (!product) notFound();
 
   const cart = await getMyCart();
+
+  const session = await auth();
+  const userId = session?.user?.id;
 
   return (
     <>
@@ -35,9 +41,9 @@ const ProductDetailPage = async ({
                 {product.brand} {product.category}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
-              <p>
-                {product.rating} of {product.numReviews} Reviews
-              </p>
+
+              <Rating value={Number(product.rating)} />
+              <p>{product.numReviews} reviews</p>
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <ProductPrice
                   value={Number(product.price)}
@@ -88,6 +94,14 @@ const ProductDetailPage = async ({
             </Card>
           </div>
         </div>
+      </section>
+      <section className="mt-10">
+        <h2 className="h2-bold  mb-5">Customer Reviews</h2>
+        <ReviewList
+          productId={product.id}
+          productSlug={product.slug}
+          userId={userId || ""}
+        />
       </section>
     </>
   );

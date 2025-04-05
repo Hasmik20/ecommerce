@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import UserButton from "./user-button";
+import Search from "./search";
 
 const Mode = () => {
   return (
@@ -30,10 +31,13 @@ const Mode = () => {
           </SheetTrigger>
           <SheetContent className="flex flex-col items-start">
             <SheetTitle>Menu</SheetTitle>
+            <div className="mt-10">
+              <Search />
+            </div>
             <ModeToggle />
             <Button asChild variant="ghost">
               <Link href="/chart">
-                <ShoppingCart />
+                <ShoppingCart /> Cart
               </Link>
             </Button>
             <UserButton />
